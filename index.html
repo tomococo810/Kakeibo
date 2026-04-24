@@ -437,6 +437,35 @@
         String(day).padStart(2, "0")
       ].join("-");
     }
+    function exportData() {
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (!data) {
+    alert("データがありません");
+    return;
+  }
+
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "kakeibo_backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    localStorage.setItem(STORAGE_KEY, e.target.result);
+    alert("復元しました。ページを再読み込みしてください");
+  };
+
+  reader.readAsText(file);
+}
   </script>
 </body>
 </html>
